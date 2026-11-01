@@ -1,12 +1,12 @@
 # Multi-View Hallucination Detection for 3GPP RAG
 
-Code, prompts, pre-registration documents and per-question outputs for the paper
+Code, prompts, written experiment plans and per-question outputs for the paper
 
 > **Perturbing the Evidence, Not the Sampler: Multi-View Consistency and Local Verification for Hallucination Detection in Retrieval-Augmented 3GPP Question Answering**
 > Shengming Ni, Nanjing University of Posts and Telecommunications.
 > Submitted to the *International Journal of Machine Learning and Cybernetics* (2026).
 
-The same LLM answers each 3GPP standards question four times (closed-book, BM25-RAG, dense-RAG and hybrid-RAG). Disagreement among these answers, fused with option-level evidence checks from two small local models (a 0.2B NLI model and Qwen3-0.6B), flags likely wrong answers. On 2,500 held-out TeleQnA standards questions the detector reaches AUROC 0.790, against 0.699 for LLM-as-a-judge and 0.700 for five-sample self-consistency.
+The same LLM answers each 3GPP standards question four times (closed-book, BM25-RAG, dense-RAG and hybrid-RAG). Disagreement among these answers, fused with option-level evidence checks from two small local models (a 0.2B NLI model and Qwen3-0.6B), flags likely wrong answers. The detector is called MVLV (multi-view consistency with local verification). On 2,500 held-out TeleQnA standards questions it reaches AUROC 0.790, compared with 0.699 for LLM-as-a-judge and 0.700 for five-sample self-consistency.
 
 ## Main results (test split, n = 2,500)
 
@@ -14,12 +14,14 @@ The same LLM answers each 3GPP standards question four times (closed-book, BM25-
 |---|---|---|
 | LLM-as-a-judge | 1 API call | 0.699 [0.674, 0.720] |
 | Self-consistency (K = 5) | 5 API calls | 0.700 [0.674, 0.724] |
-| SLM verifier only (Qwen3-0.6B) | 0.52 s on a laptop GPU | 0.723 [0.700, 0.745] |
-| Multi-view agreement, no training | 3 API calls | 0.737 [0.712, 0.761] |
-| **Ours-lite** (closed-book view + local verifiers) | 1 short API call + 0.85 s | 0.762 [0.739, 0.786] |
-| **Ours** (all views + local verifiers) | 3 API calls + 0.85 s | **0.790** [0.767, 0.814] |
+| SLM-contrast (Qwen3-0.6B verifier only) | 0.52 s on a laptop GPU | 0.723 [0.700, 0.745] |
+| MV-vote (multi-view agreement, no training) | 3 API calls | 0.737 [0.712, 0.761] |
+| **MVLV-lite** (closed-book view + local verifiers) | 1 short API call + 0.85 s | 0.762 [0.739, 0.786] |
+| **MVLV** (all views + local verifiers) | 3 API calls + 0.85 s | **0.790** [0.767, 0.814] |
 
 Abstaining on the riskiest 20% of questions raises accuracy on the remaining ones from 80.8% to 89.2%. Full results, including negative results and root-cause analyses, are in [`REPORT.md`](REPORT.md) and [`docs/04_根因诊断.md`](docs/04_根因诊断.md).
+
+The result files and scripts use the internal names of the experiments: `Ours` = MVLV, `Ours-lite` = MVLV-lite, `MV (training-free)` = MV-vote, `MV-Consist` = the four multi-view features fitted by logistic regression, `LLM-Judge` = LLM-as-a-judge.
 
 ## Repository layout
 
@@ -30,7 +32,7 @@ Abstaining on the riskiest 20% of questions raises accuracy on the remaining one
 | `scripts/` | Experiment, figure, table and manuscript build scripts (see below) |
 | `configs/default.yaml` | All experiment settings |
 | `tests/` | Unit tests (switch-off equivalence, API cache, edge cases, data split) |
-| `PLAN.md`, `PLAN_round2.md` | Pre-registered hypotheses, thresholds and budgets, written before each experiment |
+| `PLAN.md`, `PLAN_round2.md` | Written plans: hypotheses, thresholds and budgets, fixed before each round of experiments |
 | `REPORT.md` | Auto-generated results summary |
 | `outputs/exp/` | One directory per experiment run: config snapshot, metrics, per-question records |
 | `outputs/runs/` | Per-question answers of every answering setting |
@@ -80,6 +82,10 @@ python scripts/eval_retrieval.py --split test --set data.seed=3407 data.dev_size
 python scripts/run_latency.py
 python scripts/run_ragtruth.py
 
+# Supplementary statistics added in the revision (a_closed-only detector, flag precision,
+# 840-question Pro subset, permutation importance, API latency)
+python scripts/run_revision_stats.py
+
 # Figures and report
 python scripts/make_figures.py
 python scripts/make_schematics.py
@@ -119,7 +125,7 @@ The code in this repository is released under the [MIT License](LICENSE). The da
 
 ## Use of AI tools
 
-The experiment code in this repository was written with the assistance of an AI coding assistant and reviewed by the author.
+The experiment code in this repository was written with the assistance of an AI coding assistant (Claude Code, Anthropic) and reviewed by the author.
 
 ## Citation
 

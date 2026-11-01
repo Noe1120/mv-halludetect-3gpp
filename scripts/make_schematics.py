@@ -11,6 +11,8 @@ Fig. 2 和 Fig. 3 的选项、各视角答案和 NLI 分数都直接读取实验
 输出到 outputs/figures/：framework、mv_example、contrast_example（各有 PDF 和 PNG）。
 """
 import json
+
+import numpy as np
 import sys
 
 import matplotlib
@@ -146,7 +148,7 @@ def _wrap(t, n):
     return lines + [cur]
 
 
-def fig_mv_example(item, views, final):
+def fig_mv_example(item, views, final, risk, tau):
     order = [("closed", "Closed-book"), ("bm25", "BM25-RAG"), ("dense", "Dense-RAG"), ("hybrid_rerank", "Hybrid-RAG\n(final)")]
     fig, ax = plt.subplots(figsize=(3.5, 4.2))
     ax.set_position([0, 0, 1, 1])
@@ -179,7 +181,8 @@ def fig_mv_example(item, views, final):
     agree = sum(views[k] == final for k, _ in order)
     ax.add_patch(FancyBboxPatch((0.2, 0.25), 9.6, 2.1, boxstyle="round,pad=0.02,rounding_size=0.25", fc="#fbe0d2",
                                 ec=INK2, lw=0.8))
-    ax.text(5, 1.75, f"Final answer ({final}): vote share {agree}/4  →  high risk", ha="center", fontsize=8, color=INK)
+    ax.text(5, 1.75, f"Final answer ({final}): vote share {agree}/4; MVLV risk {risk:.2f} > {tau:.2f}  →  abstain",
+            ha="center", fontsize=7.5, color=INK)
     ax.text(5, 0.9, f"The final answer is wrong; the correct answer is ({item['answer']})", ha="center",
             fontsize=8, color=INK)
     save(fig, "mv_example")
@@ -213,9 +216,9 @@ def fig_contrast_example(item, support, pred):
     ax.set_axisbelow(True)
     num = lambda v: f"{v:.2f}".replace("-", "−")
     margin = support[pred] - support[rival]
-    row2 = y[opts.index(min((o for o in opts if o not in (pred, rival)), key=lambda o: support[o]))]
-    ax.text(0.99, row2, f"margin = {num(support[pred])} − {num(support[rival])} = {num(margin)}", ha="right",
-            va="center", fontsize=7, color=INK)
+    # margin 写在坐标区上方，避免压住条形旁的数值
+    ax.set_title(f"margin = {num(support[pred])} − {num(support[rival])} = {num(margin)}", loc="right", fontsize=7,
+                 color=INK)
     save(fig, "contrast_example")
 
 
@@ -237,11 +240,17 @@ def main():
 
     q_mv = 383          # 验证集中的一道题
     views = {n: pred_of(n, q_mv) for n in ("closed", "bm25", "dense", "hybrid_rerank")}
-    q_c = 5458          # 测试集中的一道题
+    q_c = 8411          # 测试集中的一道题；选项都是普通选项（不含 All/None of the above），证据支持正确选项
     scored = next(json.loads(ln) for ln in (ROOT / "outputs" / "runs" / "hybrid_rerank_test_scored.jsonl").open(encoding="utf-8")
                   if json.loads(ln)["qid"] == q_c)
     fig_framework()
-    fig_mv_example(items[q_mv], views, views["hybrid_rerank"])
+    # MVLV 在 val 上的风险分和 val 上选出的 F1 阈值（E0 的输出），图中写明是谁、按什么阈值判为高风险
+    e0 = sorted((ROOT / "outputs" / "exp").glob("*_E0_val2test"))[-1]
+    cols = json.loads((e0 / "risk_val.npy.columns.json").read_text(encoding="utf-8"))
+    val_q = sorted(q for q, it in items.items() if it["split"] == "dev")
+    risk = float(np.load(e0 / "risk_val.npy")[cols.index("Ours")][val_q.index(q_mv)])
+    tau = json.loads((e0 / "metrics.json").read_text(encoding="utf-8"))["methods"]["Ours"]["tau"]
+    fig_mv_example(items[q_mv], views, views["hybrid_rerank"], risk, tau)
     fig_contrast_example(items[q_c], {k: v[0] for k, v in scored["nli"].items()}, scored["pred"])
 
 

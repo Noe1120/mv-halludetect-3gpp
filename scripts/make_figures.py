@@ -29,7 +29,10 @@ plt.rcParams.update({
 
 # 方法在图中的固定颜色（颜色跟着方法走，不随排名或数量变化）
 # 图中只画主要方法；颜色按固定顺序分配给方法，不随排名变化
-METHOD_ORDER = ["Ours", "MV-Consist", "SLM-contrast", "LLM-Judge", "Ours-lite", "Self-Consist (K=5)", "Retrieval"]
+METHOD_ORDER = ["Ours", "MV (training-free)", "SLM-contrast", "LLM-Judge", "Ours-lite", "Self-Consist (K=5)", "Retrieval"]
+# 正文和表 3 用的名称。E0 的结果文件里仍是旧键名（Ours、LLM-Judge 等），只在画图时换成显示名
+DISPLAY = {"Ours": "MVLV", "Ours-lite": "MVLV-lite", "MV (training-free)": "MV-vote", "LLM-Judge": "LLM-as-a-judge",
+           "Self-Consist (K=5)": "Self-consistency (K = 5)", "Retrieval": "Retrieval score", "SLM-contrast": "SLM-contrast"}
 
 
 def style(method):
@@ -54,7 +57,7 @@ def fig_risk_coverage(det):
         cov, acc = zip(*curves[m])
         c, ls = style(m)
         lw = 2.0 if m == "Ours" else 1.2
-        ax.plot([x * 100 for x in cov], [y * 100 for y in acc], color=c, ls=ls, lw=lw, label=m)
+        ax.plot([x * 100 for x in cov], [y * 100 for y in acc], color=c, ls=ls, lw=lw, label=DISPLAY.get(m, m))
     ax.axhline(det["answer_accuracy"] * 100, color=INK2, lw=0.8, ls=":")
     ax.text(101, det["answer_accuracy"] * 100, " no abstention", color=INK2, va="center", fontsize=7)
     ax.set_xlabel("Coverage (%)")
@@ -65,32 +68,50 @@ def fig_risk_coverage(det):
     save(fig, "risk_coverage")
 
 
-LABEL_OFFSETS = {"LLM-Judge": (-6, -9), "MV-Consist": (5, 3), "Retrieval": (5, 6), "NLI-contrast": (5, -2)}
+LABEL_OFFSETS = {"LLM-Judge": (-6, -9), "MV (training-free)": (-6, 3), "Retrieval": (5, 6), "NLI-contrast": (5, -2),
+                 "Self-Consist (K=5)": (-6, -9)}
 
 
 def fig_cost_auroc(det):
-    """检测效果与额外 API 成本：横轴为每 1000 题的额外 API 花费（美元），纵轴为 AUROC。"""
+    """检测效果与额外 API 成本：横轴为每 1000 题的额外 API 花费（元，对数轴），纵轴为 AUROC。
+
+    不花 API 的方法（只在本地运行）没有对数坐标，画在左侧单独的 "0" 位置，两段横轴之间画断轴符号。
+    """
     methods = det["methods"]
-    fig, ax = plt.subplots(figsize=(3.5, 2.6))
-    floor = 0.003           # 不花 API 的方法画在左边界，并在标签里注明 local / free
-    pts = []
-    for m in METHOD_ORDER:
-        if m not in methods:
-            continue
-        usd = methods[m].get("cost_usd_per_q", 0.0) * 1000
-        pts.append((m, max(usd, floor), methods[m]["auroc"], usd == 0))
-    for m, x, yv, free in pts:
+    fig, (ax0, ax) = plt.subplots(1, 2, figsize=(3.5, 2.6), sharey=True,
+                                  gridspec_kw={"width_ratios": [1, 5], "wspace": 0.06})
+    # 左段在上层且背景透明，标注可以伸进右段而不被右段的背景盖住
+    ax0.set_zorder(ax.get_zorder() + 1)
+    ax0.patch.set_visible(False)
+    pts = [(m, methods[m].get("cost_usd_per_q", 0.0) * 1000, methods[m]["auroc"]) for m in METHOD_ORDER if m in methods]
+    for m, x, yv in pts:
         c, _ = style(m)
-        ax.scatter(x, yv, s=40, color=c, edgecolor="white", linewidth=1.5, zorder=3)
-        label = f"{m} (local only)" if free else m
-        # 点距离很近时按固定方向错开标签
+        target = ax0 if x == 0 else ax
+        xx = 0 if x == 0 else x
+        target.scatter(xx, yv, s=40, color=c, edgecolor="white", linewidth=1.5, zorder=3)
         dx, dy = LABEL_OFFSETS.get(m, (5, 3))
-        ax.annotate(label, (x, yv), textcoords="offset points", xytext=(dx, dy), fontsize=6.5, color=INK,
-                    ha="right" if dx < 0 else "left")
+        if x == 0:
+            # 检索分数随宿主输出一起得到（free）；SLM 等要在本地 GPU 上多算一遍（local）
+            free = m in ("Retrieval", "Self-cite")
+            dx, dy = (6, 4) if free else (6, -3)
+            label = DISPLAY.get(m, m) + (" (free)" if free else " (local)")
+        else:
+            label = DISPLAY.get(m, m)
+        target.annotate(label, (xx, yv), textcoords="offset points", xytext=(dx, dy), fontsize=6.5,
+                        color=INK, ha="right" if dx < 0 else "left", annotation_clip=False, zorder=4)
     ax.set_xscale("log")
+    ax0.set_xlim(-1, 1)
+    ax0.set_xticks([0], ["0"])
+    ax0.spines["right"].set_visible(False)
+    ax.spines["left"].set_visible(False)
+    ax.tick_params(axis="y", left=False)
+    ax0.set_ylabel("AUROC")
+    # 断轴符号：两段横轴相接处各画一条短斜线
+    kw = dict(color=INK2, clip_on=False, lw=0.8)
+    ax0.plot([0.92, 1.08], [-0.03, 0.03], transform=ax0.transAxes, **kw)
+    ax.plot([-0.015, 0.015], [-0.03, 0.03], transform=ax.transAxes, **kw)
     unit = det.get("cost_unit", "USD")
-    ax.set_xlabel(f"Extra API cost per 1k questions ({unit}, log)")
-    ax.set_ylabel("AUROC")
+    ax.set_xlabel(f"Extra API cost per 1k questions ({unit}, log scale)")
     save(fig, "cost_auroc")
 
 
@@ -146,7 +167,8 @@ def load_val2test():
     # 每千题额外 API 成本（元）：官方空闲价 × seed=3407 test 上实测的平均 token 数，由论文统计脚本写入 paper/facts.json，
     # 与正文 VI-G 节的数字一致。本地方法记为 0。
     c = json.loads((ROOT / "paper" / "facts.json").read_text(encoding="utf-8"))["cost_per_1k_cny"]
-    api = {"MV-Consist": c["three_views"], "Ours": c["three_views"], "Ours-lite": c["closed"], "LLM-Judge": c["judge"]}
+    api = {"MV (training-free)": c["three_views"], "MV-Consist": c["three_views"], "Ours": c["three_views"],
+           "Ours-lite": c["closed"], "LLM-Judge": c["judge"]}
     methods = {}
     for k, r in m["methods"].items():
         methods[k] = {"auroc": r["test"]["auroc"], "cost_usd_per_q": api.get(k, 0.0) / 1000}

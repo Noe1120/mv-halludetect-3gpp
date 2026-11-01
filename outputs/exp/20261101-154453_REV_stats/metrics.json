@@ -1,0 +1,118 @@
+{
+ "a_closed only": {
+  "val": 0.6911,
+  "test": 0.6682,
+  "ci": [
+   0.645,
+   0.689
+  ]
+ },
+ "free + a_closed": {
+  "val": 0.7665,
+  "test": 0.7366,
+  "ci": [
+   0.712,
+   0.762
+  ]
+ },
+ "a_closed + SLM-contrast": {
+  "val": 0.7966,
+  "test": 0.7611,
+  "ci": [
+   0.736,
+   0.785
+  ]
+ },
+ "flag_sampling_val": {
+  "flag_rate": 0.136,
+  "recall": 0.369,
+  "precision": 0.4559,
+  "n_flag": 68
+ },
+ "flag_evidence_val": {
+  "flag_rate": 0.242,
+  "recall": 0.6429,
+  "precision": 0.4463,
+  "n_flag": 121
+ },
+ "pro_subset": {
+  "n": 840,
+  "n_pro_rows": 1000,
+  "flash_acc": 0.8071,
+  "pro_acc": 0.7726,
+  "judge_flash": {
+   "auroc": 0.7071,
+   "ci": [
+    0.664,
+    0.748
+   ]
+  },
+  "sc_flash": {
+   "auroc": 0.7011,
+   "ci": [
+    0.656,
+    0.743
+   ]
+  },
+  "ours_flash": {
+   "auroc": 0.7821,
+   "ci": [
+    0.739,
+    0.823
+   ]
+  }
+ },
+ "bm25_dense_errors_test": {
+  "bm25_wrong": 477,
+  "dense_wrong": 519,
+  "both": 357,
+  "only_bm25": 120,
+  "only_dense": 162,
+  "jaccard": 0.5587
+ },
+ "perm_importance_test": {
+  "agree_closed": 0.0311,
+  "agree_bm25": 0.0296,
+  "view_vote": 0.0232,
+  "slm_argmax_agree": 0.0148,
+  "cites_evidence": 0.0115,
+  "rerank_top": 0.0043,
+  "slm_own": 0.0041,
+  "slm_margin": 0.0035,
+  "nli_own": 0.0025,
+  "nli_margin": 0.0015,
+  "nli_rival": 0.0,
+  "nli_contra": -0.0008,
+  "agree_dense": -0.0014,
+  "slm_rival": -0.0016
+ },
+ "perm_base_auroc": 0.7899,
+ "vote_is_linear_in_agreements": true,
+ "set_options": {
+  "test_questions_with_set_option": 227,
+  "share": 0.0908,
+  "selected_is_set_option_test": 149
+ },
+ "api_latency_test": {
+  "closed": {
+   "median_s": 0.98,
+   "mean_s": 0.99,
+   "n": 2500
+  },
+  "bm25": {
+   "median_s": 1.06,
+   "mean_s": 1.08,
+   "n": 2500
+  },
+  "dense": {
+   "median_s": 1.17,
+   "mean_s": 1.19,
+   "n": 2500
+  },
+  "hybrid_rerank": {
+   "median_s": 1.04,
+   "mean_s": 1.05,
+   "n": 2500
+  }
+ }
+}

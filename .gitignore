@@ -38,6 +38,7 @@ paper/latex/*.synctex.gz
 picture/
 paper/archive_v1/
 paper/archive_v2/
+paper/archive_v3/
 outputs/archive_testcv_20261030/
 
 # ---- 稿件全文：投稿/录用前不公开（需要时再决定是否放预印本） ----
@@ -53,6 +54,7 @@ paper/latex/references.bib
 paper/latex/*.jpg
 # 内部写作和投稿笔记
 paper/修改说明_*.md
+审核/
 paper/投稿前检查清单.md
 docs/03_生图需求.md
 docs/README_工作说明_旧版.md
