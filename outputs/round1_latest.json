@@ -1,0 +1,17 @@
+{
+ "base": {
+  "n_val": 500,
+  "n_test": 2500,
+  "halluc_val": 84,
+  "halluc_test": 479,
+  "acc_val": 0.832,
+  "acc_test": 0.8084,
+  "local_seconds_per_q": {
+   "nli": 0.3549207367897034,
+   "slm": 0.5306432719230652
+  }
+ },
+ "E5": {
+  "dir": "D:\\Users\\1\\Desktop\\水\\outputs\\exp\\20261030-181232_E5_self_consistency"
+ }
+}

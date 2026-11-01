@@ -1,0 +1,45 @@
+data:
+  teleqna: data/raw/teleqna/kf_full.parquet
+  corpus_db: data/raw/Documents.db
+  categories:
+  - Standards specifications
+  - Standards overview
+  dev_size: 500
+  seed: 3407
+chunking:
+  strategy: section
+  max_words: 300
+  overlap_words: 50
+  min_words: 20
+  drop_sections:
+  - References
+  - Change history
+retrieval:
+  method: hybrid
+  query_mode: question
+  candidates: 30
+  top_k: 5
+  rrf_k: 60
+  rerank: true
+  embed_model: BAAI/bge-base-en-v1.5
+  query_prefix: 'Represent this sentence for searching relevant passages: '
+  rerank_model: BAAI/bge-reranker-base
+  device: cuda
+llm:
+  model: deepseek-flash
+  base_url: https://api.deepseek.com
+  api_key_env: LLM_API_KEY
+  temperature: 0.0
+  max_tokens: 300
+  concurrency: 8
+  extra_body:
+    thinking:
+      type: disabled
+  price_input_per_m: 0.22
+  price_output_per_m: 0.66
+  price_cache_hit_per_m: 0.007
+detection:
+  nli_model: MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli
+  slm_model: Qwen/Qwen3-0.6B
+  device: cuda
+  tau: 0.5

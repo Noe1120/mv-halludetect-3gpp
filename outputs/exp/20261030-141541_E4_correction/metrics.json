@@ -1,0 +1,39 @@
+{
+ "n_val": 500,
+ "n_test": 2500,
+ "halluc_val": 84,
+ "halluc_test": 479,
+ "acc_val": 0.832,
+ "acc_test": 0.8084,
+ "local_seconds_per_q": {
+  "nli": 0.3549207367897034,
+  "slm": 0.5306432719230652
+ },
+ "threshold_acc": 0.005,
+ "tau_grid_val": {
+  "0.1": 0.86,
+  "0.2": 0.85,
+  "0.3": 0.852
+ },
+ "tau": 0.1,
+ "acc_none": [
+  0.832,
+  0.8084
+ ],
+ "acc_all_bm25": [
+  0.852,
+  0.8092
+ ],
+ "acc_corrected": [
+  0.86,
+  0.8172
+ ],
+ "delta_val": 0.008000000000000007,
+ "delta_test": 0.008000000000000007,
+ "mcnemar_val_vs_best_base": {
+  "gain": 6,
+  "loss": 2,
+  "p": 0.2890625
+ },
+ "verdict": "成立（未达显著）"
+}

@@ -1,0 +1,21 @@
+# Versions used for all experiments in the paper (Python 3.11.18, Windows 11, CUDA 12.6).
+# Install PyTorch first, matching your CUDA version: https://pytorch.org/get-started/locally/
+#   e.g. pip install torch==2.14.1 --index-url https://download.pytorch.org/whl/cu126
+torch==2.14.1
+transformers==5.21.1
+sentence-transformers==6.2.0
+accelerate==1.15.0
+safetensors==0.8.0
+bm25s==0.3.16
+PyStemmer==3.1.0
+numpy==2.4.6
+scipy==1.17.1
+scikit-learn==1.9.1
+pandas==3.1.0
+pyarrow==26.0.0
+PyYAML==6.0.3
+tqdm==4.70.1
+openai==3.41.0
+python-docx==1.2.0
+matplotlib==3.11.2
+pytest==9.2.0

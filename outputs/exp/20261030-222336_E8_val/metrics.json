@@ -1,0 +1,22 @@
+{
+ "split": "val",
+ "threshold": 0.01,
+ "variants": {
+  "fixed_chunk": {
+   "acc_variant": 0.84,
+   "acc_baseline": 0.832,
+   "baseline": "hybrid_rerank",
+   "delta": 0.008000000000000007,
+   "mcnemar": {
+    "gain": 20,
+    "loss": 16,
+    "p": 0.617719317029696
+   },
+   "invalid": 1,
+   "new_calls": 500,
+   "cost_cny": 1.3737044800000002
+  }
+ },
+ "verdict": "不成立",
+ "cost_cny": 1.3737044800000002
+}

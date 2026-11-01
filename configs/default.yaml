@@ -1,0 +1,47 @@
+# 默认实验配置。命令行可用 --set key=value 覆盖，例如 --set retrieval.method=bm25
+
+data:
+  teleqna: data/raw/teleqna/kf_full.parquet   # TeleQnA 全量 10,000 题（MIT 许可的公开副本）
+  corpus_db: data/raw/Documents.db            # 3GPP Release 18 规范全文（netop/3GPP-R18）
+  categories: [Standards specifications, Standards overview]   # 只评测与标准相关的 3,000 题
+  dev_size: 200       # 从中固定抽 200 题做开发集（调阈值、调提示词），其余为测试集
+  seed: 42
+
+chunking:
+  strategy: section   # section = 按章节切块（本文方法） | fixed = 固定长度切块（基线）
+  max_words: 300
+  overlap_words: 50
+  min_words: 20       # 少于这个词数的小节并入下一节
+  drop_sections: [References, Change history]   # 标题包含这些词的章节不入库
+
+retrieval:
+  method: hybrid      # bm25 | dense | hybrid（BM25 + 稠密向量，RRF 融合）
+  query_mode: question   # question = 只用题干检索 | question+options = 题干加选项
+  candidates: 30      # 每路召回数量
+  top_k: 5            # 最终送给大模型的片段数
+  rrf_k: 60
+  rerank: true
+  embed_model: BAAI/bge-base-en-v1.5
+  query_prefix: "Represent this sentence for searching relevant passages: "
+  rerank_model: BAAI/bge-reranker-base
+  device: cuda
+
+llm:                  # 任何 OpenAI 兼容接口都可以（DeepSeek、通义千问、硅基流动、本地 Ollama）
+  model: deepseek-flash         # DeepSeek-V4.1-Flash；对比实验可换 deepseek-v4-pro
+  base_url: https://api.deepseek.com
+  api_key_env: LLM_API_KEY      # 在 .env 里填写这个变量
+  temperature: 0.0
+  max_tokens: 300
+  concurrency: 8
+  extra_body:                   # deepseek-flash 默认开启思考，会耗尽 max_tokens 导致空回答，这里关闭
+    thinking: {type: disabled}
+  # 每百万 token 价格（美元，2026-10 非高峰价，来源 deepseekprice.com），只用于估算成本
+  price_input_per_m: 0.22
+  price_output_per_m: 0.66
+  price_cache_hit_per_m: 0.007
+
+detection:
+  nli_model: MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli
+  slm_model: Qwen/Qwen3-0.6B   # 内存充足（可用内存 > 8GB）时可换 Qwen/Qwen3-1.7B 做对比
+  device: cuda
+  tau: 0.5            # 风险分数超过 tau 判为幻觉，建议在开发集上调

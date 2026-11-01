@@ -1,0 +1,62 @@
+# ---- 密钥：绝对不能上传 ----
+.env
+.env.*
+!.env.example
+
+# ---- 本地环境和工具 ----
+.conda/
+.claude/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ipynb_checkpoints/
+
+# ---- 第三方数据：不重新分发，由 scripts/download_data.py 从原始来源下载 ----
+data/raw/
+
+# ---- 可重新生成的大文件（索引、切块、本地模型打分） ----
+data/processed/index/
+data/processed/chunks_*.jsonl
+data/processed/telco_rag/
+data/processed/scores_*.jsonl
+data/processed/atomic_*.jsonl
+data/processed/ragtruth_scores.jsonl
+# 大模型响应缓存（20 MB）通过 GitHub Release 附件发布，不放进 git 历史
+data/processed/llm_cache.sqlite
+
+# ---- LaTeX 编译中间文件 ----
+paper/latex/*.aux
+paper/latex/*.log
+paper/latex/*.blg
+paper/latex/*.out
+paper/latex/*.bbl
+paper/latex/*.synctex.gz
+
+# ---- 个人工作文件（中文修改要求、生图草稿、旧版稿件） ----
+修改.md
+要求.md
+picture/
+paper/archive_v1/
+paper/archive_v2/
+outputs/archive_testcv_20261030/
+
+# ---- 稿件全文：投稿/录用前不公开（需要时再决定是否放预印本） ----
+paper/latex/main.pdf
+paper/manuscript_draft.docx
+paper/manuscript_full.md
+paper/manuscript.md
+paper/outline.md
+paper/sections/
+paper/latex/main.tex
+paper/latex/references.bib
+# LaTeX 目录里早期由生图模型做的旧图副本（现在用的是 outputs/figures/ 里代码画的 PDF）
+paper/latex/*.jpg
+# 内部写作和投稿笔记
+paper/修改说明_*.md
+paper/投稿前检查清单.md
+docs/03_生图需求.md
+docs/README_工作说明_旧版.md
+# 稿件生成脚本依赖不公开的 paper/sections/
+scripts/build_paper.py
+scripts/build_latex.py
+docs/仓库发布说明.md

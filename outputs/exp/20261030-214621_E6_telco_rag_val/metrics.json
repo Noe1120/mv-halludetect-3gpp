@@ -1,0 +1,9 @@
+{
+ "n": 20,
+ "accuracy": 0.9,
+ "acc[Standards specifications]": 0.8571428571428571,
+ "acc[Standards overview]": 1.0,
+ "invalid": 0,
+ "new_calls": 60,
+ "cost_cny_this_run": 0.084428
+}

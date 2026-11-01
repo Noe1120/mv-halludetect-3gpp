@@ -1,0 +1,44 @@
+{
+ "n": 500,
+ "telco_rag_star": 0.792,
+ "vs": {
+  "closed": {
+   "acc": 0.788,
+   "telco_better": 47,
+   "telco_worse": 45,
+   "p": 0.9170405196524714
+  },
+  "bm25": {
+   "acc": 0.852,
+   "telco_better": 23,
+   "telco_worse": 53,
+   "p": 0.0007645817391550476
+  },
+  "dense": {
+   "acc": 0.794,
+   "telco_better": 35,
+   "telco_worse": 36,
+   "p": 1.0
+  },
+  "hybrid_rerank": {
+   "acc": 0.832,
+   "telco_better": 27,
+   "telco_worse": 47,
+   "p": 0.02651683255068482
+  },
+  "telco_rag_star": {
+   "acc": 0.764,
+   "telco_better": 45,
+   "telco_worse": 31,
+   "p": 0.13538510529943087
+  }
+ },
+ "by_category": {
+  "Standards specifications": 0.7636363636363637,
+  "Standards overview": 0.8470588235294118
+ },
+ "invalid": 0,
+ "calls_per_q": 3.0,
+ "tokens_per_q": 3735.968,
+ "verdict": "显著低于宿主"
+}

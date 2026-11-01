@@ -1,0 +1,27 @@
+{
+ "n_val": 500,
+ "n_test": 2500,
+ "halluc_val": 84,
+ "halluc_test": 479,
+ "acc_val": 0.832,
+ "acc_test": 0.8084,
+ "local_seconds_per_q": {
+  "nli": 0.3549207367897034,
+  "slm": 0.5306432719230652
+ },
+ "usage": {
+  "calls": 2000,
+  "cached": 500,
+  "prompt_tokens": 4579100,
+  "completion_tokens": 128403,
+  "cache_hit_tokens": 3268340,
+  "cost_cny": 0.8552677999999982
+ },
+ "cost_cny_estimate": 0.8552677999999982,
+ "val_auroc": 0.6440018315018315,
+ "ours_val_auroc": 0.8522493131868132,
+ "ours_minus_sc_val_ci95": [
+  0.15074192144786255,
+  0.26862308936119805
+ ]
+}

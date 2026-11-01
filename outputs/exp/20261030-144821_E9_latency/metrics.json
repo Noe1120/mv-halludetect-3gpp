@@ -1,0 +1,29 @@
+{
+ "params": {
+  "bge-base-en-v1.5": "109M",
+  "bge-reranker-base": "278M",
+  "DeBERTa-v3-base-mnli-fever-anli": "184M",
+  "Qwen3-0.6B": "0.6B"
+ },
+ "n": {
+  "cpu": 20,
+  "cuda": 100
+ },
+ "torch_threads": 16,
+ "cpu": {
+  "retrieval_ms": 5787.807585002156,
+  "nli_ms": 9238.977964984952,
+  "slm_ms": 14616.101189993788,
+  "total_local_ms": 29642.886739980895
+ },
+ "cuda": {
+  "retrieval_ms": 184.3,
+  "nli_ms": 325.4,
+  "slm_ms": 521.6,
+  "total_local_ms": 1031.3
+ },
+ "provenance": {
+  "cuda": "转录自首次运行 20261030-141622_E9_latency 的终端输出（100 题；该次 CPU 阶段被内存回收中止）",
+  "cpu": "本次运行实测（20 题，逐题计时见 timings.jsonl）"
+ }
+}

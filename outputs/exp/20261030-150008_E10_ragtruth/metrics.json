@@ -1,0 +1,45 @@
+{
+ "n_train": 30,
+ "n_test": 30,
+ "halluc_rate_test": 0.3333333333333333,
+ "methods": {
+  "NLI-claim": {
+   "auroc": 0.645,
+   "auroc_ci95": [
+    0.40494287330316747,
+    0.850954681389464
+   ],
+   "f1": 0.42105263157894735,
+   "tau": 0.9673,
+   "auroc[Summary]": 0.645,
+   "f1[Summary]": 0.42105263157894735
+  },
+  "SLM-verify": {
+   "auroc": 0.755,
+   "auroc_ci95": [
+    0.5142045454545454,
+    0.9524350649350648
+   ],
+   "f1": 0.64,
+   "tau": 0.001,
+   "auroc[Summary]": 0.755,
+   "f1[Summary]": 0.64
+  },
+  "Fusion": {
+   "auroc": 0.39,
+   "auroc_ci95": [
+    0.1699425465838509,
+    0.6193352272727272
+   ],
+   "f1": 0.11764705882352941,
+   "tau": 0.4853,
+   "auroc[Summary]": 0.39,
+   "f1[Summary]": 0.11764705882352941
+  }
+ },
+ "seconds_per_response": 0.46966260274251304,
+ "reference": {
+  "RAGTruth paper / LettuceDetect（引用，回答级 F1）": "LettuceDetect-large 79.22%（摘要已核实）；其余数字需查原文"
+ },
+ "note": "只迁移本地核验器；多视角一致性需要多个检索视角，RAGTruth 不提供，无法迁移。"
+}
