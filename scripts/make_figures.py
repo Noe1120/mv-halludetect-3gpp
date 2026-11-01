@@ -20,7 +20,9 @@ LINES = ["-", "--", "-.", ":", (0, (5, 1)), (0, (3, 1, 1, 1)), (0, (1, 1))]
 INK, INK2, GRID = "#0b0b0b", "#52514e", "#e4e3df"
 
 plt.rcParams.update({
-    "font.family": "serif", "font.serif": ["Times New Roman", "DejaVu Serif"], "font.size": 9,
+    "font.family": "sans-serif", "font.sans-serif": ["Arial", "Helvetica", "DejaVu Sans"], "font.size": 9,
+    # IJMLC 投稿指南：图中文字用 Helvetica 或 Arial，印刷后 8–12 pt。图按 0.7 倍正文宽（约 3.6 英寸）排版，与画布宽度接近 1:1
+   
     "axes.edgecolor": INK2, "axes.labelcolor": INK, "xtick.color": INK2, "ytick.color": INK2,
     "axes.spines.top": False, "axes.spines.right": False, "axes.grid": True,
     "grid.color": GRID, "grid.linewidth": 0.6, "legend.frameon": False,
@@ -59,17 +61,17 @@ def fig_risk_coverage(det):
         lw = 2.0 if m == "Ours" else 1.2
         ax.plot([x * 100 for x in cov], [y * 100 for y in acc], color=c, ls=ls, lw=lw, label=DISPLAY.get(m, m))
     ax.axhline(det["answer_accuracy"] * 100, color=INK2, lw=0.8, ls=":")
-    ax.text(101, det["answer_accuracy"] * 100, " no abstention", color=INK2, va="center", fontsize=7)
+    ax.text(101, det["answer_accuracy"] * 100, " no abstention", color=INK2, va="center", fontsize=8)
     ax.set_xlabel("Coverage (%)")
     ax.set_ylabel("Accuracy on answered (%)")
     # 图例放在坐标轴下方，避免压住曲线
-    ax.legend(fontsize=6.5, loc="upper center", bbox_to_anchor=(0.5, -0.22), ncol=4, handlelength=2.2,
+    ax.legend(fontsize=8, loc="upper center", bbox_to_anchor=(0.5, -0.22), ncol=4, handlelength=2.2,
               columnspacing=0.8)
     save(fig, "risk_coverage")
 
 
-LABEL_OFFSETS = {"LLM-Judge": (-6, -9), "MV (training-free)": (-6, 3), "Retrieval": (5, 6), "NLI-contrast": (5, -2),
-                 "Self-Consist (K=5)": (-6, -9)}
+LABEL_OFFSETS = {"LLM-Judge": (-6, -11), "MV (training-free)": (-6, 3), "Retrieval": (5, 6), "NLI-contrast": (5, -2),
+                 "Self-Consist (K=5)": (-4, 7)}
 
 
 def fig_cost_auroc(det):
@@ -97,7 +99,7 @@ def fig_cost_auroc(det):
             label = DISPLAY.get(m, m) + (" (free)" if free else " (local)")
         else:
             label = DISPLAY.get(m, m)
-        target.annotate(label, (xx, yv), textcoords="offset points", xytext=(dx, dy), fontsize=6.5,
+        target.annotate(label, (xx, yv), textcoords="offset points", xytext=(dx, dy), fontsize=8,
                         color=INK, ha="right" if dx < 0 else "left", annotation_clip=False, zorder=4)
     ax.set_xscale("log")
     ax0.set_xlim(-1, 1)
@@ -131,7 +133,7 @@ def fig_ablation():
     colors = [GRID if n == "closed" else SERIES[0] for n in names]
     ax.barh(range(len(names)), acc, color=colors, height=0.6)
     for i, v in enumerate(acc):
-        ax.text(v + 0.8, i, f"{v:.1f}", va="center", fontsize=7, color=INK)
+        ax.text(v + 0.8, i, f"{v:.1f}", va="center", fontsize=8, color=INK)
     ax.set_yticks(range(len(names)), [labels[n] for n in names])
     ax.set_xlim(0, 100)
     ax.set_xlabel("Answer accuracy on test (%)")

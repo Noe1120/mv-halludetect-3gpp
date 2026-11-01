@@ -30,7 +30,7 @@ BAD, BAD_FILL = "#c23b3b", "#f6d9d9"
 FILL = {"input": "#ececea", "view": "#fbf1cf", "mv": "#fbe0d2", "ver": "#d9efe9", "fuse": "#dde7f7"}
 EVID = "#8a8984"          # 证据（语料到检索视角）用浅灰虚线，和问题的实线区分开
 PT = 1 / 72               # 1 磅（英寸）；Fig. 1 的坐标单位就是英寸
-TS, SS = 8, 7             # 框内标题和副标题的字号（磅）
+TS, SS = 8.5, 8            # 框内标题和副标题的字号（磅）
 
 
 def box(ax, x, y, w, h, title, sub=None, fill="#ffffff", edge=INK2, lw=0.8):
@@ -72,7 +72,7 @@ def fig_framework():
     for x, t in ((0.42, "Input"), (1.47, "Multi-view answering"), (2.8, "Hallucination signals"), (3.86, "Fusion"),
                  (4.76, "Decision")):
         ax.text(x, 2.29, t, ha="center", va="center", fontsize=8, fontweight="bold", color=INK)
-    ax.text(1.47, 2.13, "same LLM, four evidence settings", ha="center", va="center", fontsize=6.5, style="italic",
+    ax.text(1.47, 2.13, "same LLM, four evidence settings", ha="center", va="center", fontsize=8, style="italic",
             color=INK2)
 
     # 输入
@@ -103,7 +103,7 @@ def fig_framework():
         arrow(ax, (cx, y), (vx, y), EVID, "--")
 
     # 四个答案 → 多视角一致性
-    sx, sw = 2.3, 1.0
+    sx, sw = 2.42, 0.96
     box(ax, sx, 1.18, sw, 0.62, "Multi-view\nconsistency", "agreement of\nthe 4 answers", fill=FILL["mv"])
     bus = 2.08
     centers = [ys[k] + vh / 2 for k in ys]
@@ -116,8 +116,9 @@ def fig_framework():
     box(ax, sx, 0.10, sw, 0.68, "Option-level\nverification", "NLI 0.2B, SLM 0.6B\nlocal GPU", fill=FILL["ver"])
     yv = 0.36
     arrow(ax, (vx + vw, yv), (sx, yv))
-    ax.text((vx + vw + sx) / 2, yv - 0.035, "answer +\nevidence", ha="center", va="top", fontsize=6.5, color=INK2,
-            linespacing=1.1)
+    # 标注放在箭头下方、视角框和核验框之间的空隙里
+    ax.text((vx + vw + sx) / 2, yv - 0.04, "answer,\nevidence", ha="center", va="top", fontsize=8, color=INK2,
+            linespacing=1.05)
 
     # 融合 → 决策
     fx, fw, fy, fh = 3.5, 0.72, 0.67, 0.46
@@ -162,12 +163,12 @@ def fig_mv_example(item, views, final, risk, tau):
     y0 = 11.6 - 0.42 * len(q) - 0.35
     for k, (o, txt) in enumerate(item["options"].items()):
         right = o == item["answer"]
-        ax.text(0.75, y0 - 0.66 * k, f"({o}) {txt}" + ("  (correct)" if right else ""), fontsize=7.5, va="top",
+        ax.text(0.75, y0 - 0.66 * k, f"({o}) {txt}" + ("  (correct)" if right else ""), fontsize=8.5, va="top",
                 color=OK if right else INK, fontweight="bold" if right else "normal")
     xs = [1.35, 3.8, 6.25, 8.7]
     for x in xs:
         arrow(ax, (5, 7.62), (x, 6.3))
-    ax.text(5, 7.05, "same LLM, four evidence settings", ha="center", va="center", fontsize=7, style="italic",
+    ax.text(5, 7.05, "same LLM, four evidence settings", ha="center", va="center", fontsize=8, style="italic",
             color=INK2, bbox=dict(fc="white", ec="none", pad=1.2))
     for x, (k, label) in zip(xs, order):
         p = views[k]
@@ -177,14 +178,14 @@ def fig_mv_example(item, views, final, risk, tau):
         ax.text(x, 5.3, p, ha="center", va="center", fontsize=15, fontweight="bold", color=INK)
         ax.text(x + 0.82, 6.12, "✓" if right else "✗", ha="center", va="center", fontsize=8.5,
                 color=OK if right else BAD, fontfamily="DejaVu Sans")
-        ax.text(x, 3.95, label, ha="center", va="top", fontsize=7.5, color=INK, linespacing=1.1)
+        ax.text(x, 3.95, label, ha="center", va="top", fontsize=8.5, color=INK, linespacing=1.1)
     agree = sum(views[k] == final for k, _ in order)
     ax.add_patch(FancyBboxPatch((0.2, 0.25), 9.6, 2.1, boxstyle="round,pad=0.02,rounding_size=0.25", fc="#fbe0d2",
                                 ec=INK2, lw=0.8))
-    ax.text(5, 1.75, f"Final answer ({final}): vote share {agree}/4; MVLV risk {risk:.2f} > {tau:.2f}  →  abstain",
-            ha="center", fontsize=7.5, color=INK)
-    ax.text(5, 0.9, f"The final answer is wrong; the correct answer is ({item['answer']})", ha="center",
-            fontsize=8, color=INK)
+    ax.text(5, 1.95, f"Final answer ({final}): vote share {agree}/4", ha="center", fontsize=8.5, color=INK)
+    ax.text(5, 1.3, f"MVLV risk {risk:.2f} > threshold {tau:.2f}  →  abstain", ha="center", fontsize=8.5, color=INK)
+    ax.text(5, 0.6, f"The final answer is wrong; the correct answer is ({item['answer']})", ha="center",
+            fontsize=8, color=INK2)
     save(fig, "mv_example")
 
 
@@ -194,30 +195,30 @@ def fig_contrast_example(item, support, pred):
     vals = [support[o] for o in opts]
     rival = max((o for o in opts if o != pred), key=lambda o: support[o])
     colors = [OK if o == item["answer"] else BAD if o == pred else "#b9b8b3" for o in opts]
-    fig, ax = plt.subplots(figsize=(3.5, 2.3), layout="constrained")
+    fig, ax = plt.subplots(figsize=(3.6, 2.9), layout="constrained")
     y = list(range(len(opts)))[::-1]
     ax.barh(y, vals, color=colors, height=0.6)
     for yi, v, o in zip(y, vals, opts):
         if o == pred:
-            tag = "  selected by LLM (wrong)"
+            tag = "selected (wrong)"
         elif o == rival:
-            tag = "  strongest rival" + (" (correct)" if o == item["answer"] else "")
+            tag = "strongest rival" + (" (correct)" if o == item["answer"] else "")
         else:
             tag = ""
-        if v > 0.6:   # 长条把标注写在条内（白字），避免伸出坐标区
-            ax.text(v - 0.02, yi, f"{v:.2f}{tag}", ha="right", va="center", fontsize=7, color="white")
-        else:
-            ax.text(v + 0.015, yi, f"{v:.2f}{tag}", va="center", fontsize=7, color=INK)
-    ax.set_yticks(y, ["\n".join(_wrap(t, 24)) for t in labels], fontsize=7)
-    ax.tick_params(axis="x", labelsize=7)
+        # 数值一律写在条的右侧；说明文字写在条内左端（白字），长条短条都不会伸出坐标区，也不会互相重叠
+        ax.text(v + 0.015, yi, f"{v:.2f}", va="center", fontsize=8, color=INK)
+        if tag:
+            ax.text(0.02, yi, tag.strip(), ha="left", va="center", fontsize=8, color="white")
+    ax.set_yticks(y, ["\n".join(_wrap(t, 22)) for t in labels], fontsize=8)
+    ax.tick_params(axis="x", labelsize=8)
     ax.set_xlim(0, 1.0)
-    ax.set_xlabel("NLI entailment probability (max over top-5 chunks)", fontsize=7)
+    ax.set_xlabel("NLI entailment probability\n(max over top-5 chunks)", fontsize=8)
     ax.grid(axis="y", visible=False)
     ax.set_axisbelow(True)
     num = lambda v: f"{v:.2f}".replace("-", "−")
     margin = support[pred] - support[rival]
     # margin 写在坐标区上方，避免压住条形旁的数值
-    ax.set_title(f"margin = {num(support[pred])} − {num(support[rival])} = {num(margin)}", loc="right", fontsize=7,
+    ax.set_title(f"margin = {num(support[pred])} − {num(support[rival])} = {num(margin)}", loc="right", fontsize=8,
                  color=INK)
     save(fig, "contrast_example")
 

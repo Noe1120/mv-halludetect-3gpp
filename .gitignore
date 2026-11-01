@@ -48,6 +48,7 @@ paper/manuscript_full.md
 paper/manuscript.md
 paper/outline.md
 paper/sections/
+submission_IJMLC/
 paper/latex/main.tex
 paper/latex/references.bib
 # LaTeX 目录里早期由生图模型做的旧图副本（现在用的是 outputs/figures/ 里代码画的 PDF）
