@@ -40,6 +40,7 @@ paper/archive_v1/
 paper/archive_v2/
 paper/archive_v3/
 paper/archive_v4/
+paper/archive_v5/
 outputs/archive_testcv_20261030/
 
 # ---- 稿件全文：投稿/录用前不公开（需要时再决定是否放预印本） ----
@@ -50,6 +51,8 @@ paper/manuscript.md
 paper/outline.md
 paper/sections/
 submission_IJMLC/
+submission_AnnTelecom/
+paper/supplementary/
 paper/latex/main.tex
 paper/latex/references.bib
 # LaTeX 目录里早期由生图模型做的旧图副本（现在用的是 outputs/figures/ 里代码画的 PDF）
