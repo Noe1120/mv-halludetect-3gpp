@@ -41,14 +41,15 @@ Dear Editor,
 
 I am submitting the manuscript "{title}" for consideration as an original research article in the International Journal of Machine Learning and Cybernetics.
 
-Retrieval-augmented large language models are increasingly used to answer questions about 3GPP telecommunication standards, but about one answer in five is still wrong in our experiments, and users cannot tell which ones. The usual black-box detectors, an LLM judge and self-consistency over repeated samples, work poorly here because the model is often confidently wrong. The manuscript proposes a different risk signal: the same model answers each question with different retrieved evidence, including none, and disagreement among these answers is fused with option-level checks from two small local models.
+Context. Engineers increasingly use retrieval-augmented large language models (LLMs) to look up procedures and parameters in 3GPP specifications, the standards behind mobile networks. Answers in this domain must be exact, yet in our experiments a retrieval-augmented LLM still answers about one standards question in five incorrectly, and a wrong answer reads as fluently as a right one. A practical assistant therefore needs a per-answer risk score so that it can withhold the answers it is likely to get wrong. The two common black-box options, asking an LLM to judge the answer and checking agreement across repeated samples, work poorly here: the model is often confidently wrong, and 63% of its errors on our validation questions recur identically in five samples.
 
-The main findings are:
-- On 2,500 held-out TeleQnA questions, the detector reaches an AUROC of 0.790, compared with 0.699 for an LLM judge and 0.700 for five-sample self-consistency; both paired bootstrap intervals exclude zero.
-- Agreement across evidence views alone, with no training, reaches 0.737, which directly compares evidence perturbation with sampling.
-- A lighter variant needs one short extra API call, costs about one sixth of the judge and reaches 0.762; abstaining on the riskiest 20% of questions raises accuracy from 80.8% to 89.2%.
+Contribution. The manuscript proposes to perturb the evidence instead of the sampler. The same model answers each question closed-book and with lexical, dense and hybrid retrieval, and disagreement among these answers is fused, by logistic regression, with option-level evidence checks from two small models that run on a laptop GPU. On 2,500 held-out TeleQnA questions:
+- the detector reaches an AUROC of 0.790, compared with 0.699 for an LLM judge and 0.700 for five-sample self-consistency, and both paired bootstrap intervals exclude zero;
+- agreement across evidence views alone, without any training, reaches 0.737, a direct comparison of evidence perturbation with sampling;
+- a lighter variant needs one short extra API call, costs about one sixth of the judge and reaches 0.762, and abstaining on the riskiest 20% of questions raises accuracy from 80.8% to 89.2%.
+All weights and thresholds were fit on a separate validation split, the detector transfers without retraining to a larger model of the same family, and the manuscript also reports the experiments that did not help, with an analysis of their causes.
 
-All weights and thresholds were fit on a separate validation split, and the manuscript also reports the experiments that did not help, with an analysis of their causes. I believe the work fits the journal's scope in machine learning methods for reliable decision making and uncertainty estimation.
+Fit with the journal. The journal's scope includes foundation models, trustworthy AI and data-driven intelligent systems in applied domains. This work addresses trustworthiness of foundation models in a concrete engineering application. Its methods, uncertainty estimation from model disagreement, learned fusion of heterogeneous signals and selective prediction, are general machine learning techniques, while the evaluation reflects a real deployment setting with API-only models, a fixed cost budget and an exact-answer domain. I therefore believe the manuscript will interest the journal's readers working on reliable machine learning systems as well as those applying LLMs in engineering.
 
 This manuscript is original, has not been published previously and is not under consideration for publication elsewhere. The author has no competing interests to declare, and no funding was received for this work. The use of an AI assistant for writing the experiment code and drafting the English text is declared in Sect. 4.9 of the manuscript. The code, per-question outputs and cached model responses will be made publicly available upon acceptance.
 
@@ -101,12 +102,18 @@ def main():
     doc.styles["Normal"].font.name = "Times New Roman"
     doc.styles["Normal"].font.size = Pt(11)
     for block in letter.split("\n\n"):
-        lines = block.split("\n")
-        if all(ln.startswith("- ") for ln in lines):
-            for ln in lines:
+        text = []
+        for ln in block.split("\n"):
+            if ln.startswith("- "):
+                if text:
+                    doc.add_paragraph("\n".join(text))
+                    text = []
                 doc.add_paragraph(ln[2:], style="List Bullet")
-        else:
-            doc.add_paragraph("\n".join(lines))
+            else:
+                text.append(ln)
+        if text:
+            # 标题页的地址行保留换行；正文段落中项目符号之后的那句话单独成段
+            doc.add_paragraph("\n".join(text))
     doc.save(OUT / "cover_letter.docx")
 
     fields = [

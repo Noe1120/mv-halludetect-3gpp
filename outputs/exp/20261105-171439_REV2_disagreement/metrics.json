@@ -1,0 +1,319 @@
+{
+ "note": "cache only; c = replication probability of the host answer under a perturbation",
+ "val": {
+  "n": 500,
+  "n_wrong": 84,
+  "replication": {
+   "sample (one of 5)": {
+    "wrong": 0.85,
+    "correct": 0.9716,
+    "gap": 0.1216,
+    "gap_ci": [
+     0.0695,
+     0.1769
+    ]
+   },
+   "closed": {
+    "wrong": 0.5,
+    "correct": 0.8822,
+    "gap": 0.3822,
+    "gap_ci": [
+     0.274,
+     0.4891
+    ]
+   },
+   "bm25": {
+    "wrong": 0.6429,
+    "correct": 0.9663,
+    "gap": 0.3235,
+    "gap_ci": [
+     0.2116,
+     0.4244
+    ]
+   },
+   "dense": {
+    "wrong": 0.7143,
+    "correct": 0.9183,
+    "gap": 0.204,
+    "gap_ci": [
+     0.1072,
+     0.3012
+    ]
+   },
+   "three views": {
+    "wrong": 0.619,
+    "correct": 0.9223,
+    "gap": 0.3032,
+    "gap_ci": [
+     0.2268,
+     0.3804
+    ]
+   },
+   "three samples": {
+    "wrong": 0.8651,
+    "correct": 0.9728,
+    "gap": 0.1077,
+    "gap_ci": [
+     0.056,
+     0.1646
+    ]
+   }
+  },
+  "gap_views_minus_samples": {
+   "value": 0.1956,
+   "ci": [
+    0.1296,
+    0.2629
+   ]
+  },
+  "auroc": {
+   "three views (MV-vote)": 0.752,
+   "three samples": 0.6057,
+   "five samples (SC)": 0.644,
+   "one sample": 0.5511,
+   "closed alone": 0.6911,
+   "bm25 alone": 0.6617,
+   "dense alone": 0.602,
+   "views + five samples (sum)": 0.7688
+  },
+  "auroc_views_minus_three_samples_ci": [
+   0.0914,
+   0.2013
+  ],
+  "auroc_sum_minus_views_ci": [
+   -0.0044,
+   0.0402
+  ],
+  "flag_any_disagreement": {
+   "three views": {
+    "recall": 0.6429,
+    "fpr": 0.1611,
+    "youden": 0.4818,
+    "precision": 0.4463
+   },
+   "three samples": {
+    "recall": 0.2738,
+    "fpr": 0.0649,
+    "youden": 0.2089,
+    "precision": 0.46
+   },
+   "five samples": {
+    "recall": 0.369,
+    "fpr": 0.0889,
+    "youden": 0.2801,
+    "precision": 0.4559
+   }
+  },
+  "error_correlation_with_host": {
+   "closed": {
+    "phi": 0.513,
+    "yule_q": 0.881
+   },
+   "bm25": {
+    "phi": 0.7166,
+    "yule_q": 0.9725
+   },
+   "dense": {
+    "phi": 0.6838,
+    "yule_q": 0.962
+   },
+   "sample 1": {
+    "phi": 0.8833,
+    "yule_q": 0.9962
+   }
+  },
+  "same_wrong_option_given_host_wrong": {
+   "closed": 0.5,
+   "bm25": 0.6429,
+   "dense": 0.7143,
+   "sample 1": 0.869
+  },
+  "error_classes": {
+   "A: closed-book correct (evidence misled the model)": {
+    "n": 27,
+    "share_of_errors": 0.3214,
+    "flagged_by_views": 1.0,
+    "flagged_by_five_samples": 0.4444
+   },
+   "B: closed-book wrong, retrievers disagree": {
+    "n": 22,
+    "share_of_errors": 0.2619,
+    "flagged_by_views": 1.0,
+    "flagged_by_five_samples": 0.5455
+   },
+   "C: closed-book wrong, retrievers agree with host": {
+    "n": 35,
+    "share_of_errors": 0.4167,
+    "flagged_by_views": 0.1429,
+    "flagged_by_five_samples": 0.2
+   },
+   "C: of which closed-book gives the same wrong option": 0.8571
+  },
+  "overlap_of_flagged_errors": {
+   "flagged by views": 54,
+   "flagged by five samples": 31,
+   "both": 26,
+   "samples only": 5,
+   "views only": 28,
+   "share of sample-flagged errors also flagged by views": 0.8387
+  }
+ },
+ "test": {
+  "n": 2500,
+  "n_wrong": 479,
+  "replication": {
+   "sample (one of 5)": {
+    "wrong": 0.7879,
+    "correct": 0.9586,
+    "gap": 0.1707,
+    "gap_ci": [
+     0.1481,
+     0.1956
+    ]
+   },
+   "closed": {
+    "wrong": 0.5157,
+    "correct": 0.8521,
+    "gap": 0.3364,
+    "gap_ci": [
+     0.2903,
+     0.3787
+    ]
+   },
+   "bm25": {
+    "wrong": 0.6806,
+    "correct": 0.952,
+    "gap": 0.2714,
+    "gap_ci": [
+     0.2299,
+     0.3175
+    ]
+   },
+   "dense": {
+    "wrong": 0.6764,
+    "correct": 0.9297,
+    "gap": 0.2533,
+    "gap_ci": [
+     0.2114,
+     0.2999
+    ]
+   },
+   "three views": {
+    "wrong": 0.6242,
+    "correct": 0.9113,
+    "gap": 0.287,
+    "gap_ci": [
+     0.2553,
+     0.3192
+    ]
+   },
+   "three samples": {
+    "wrong": 0.7961,
+    "correct": 0.9601,
+    "gap": 0.164,
+    "gap_ci": [
+     0.1393,
+     0.1915
+    ]
+   }
+  },
+  "gap_views_minus_samples": {
+   "value": 0.1231,
+   "ci": [
+    0.0852,
+    0.1618
+   ]
+  },
+  "auroc": {
+   "three views (MV-vote)": 0.737,
+   "three samples": 0.6615,
+   "five samples (SC)": 0.6995,
+   "one sample": 0.5807,
+   "closed alone": 0.6682,
+   "bm25 alone": 0.6357,
+   "dense alone": 0.6267,
+   "views + five samples (sum)": 0.7939
+  },
+  "auroc_views_minus_three_samples_ci": [
+   0.0448,
+   0.1036
+  ],
+  "auroc_sum_minus_views_ci": [
+   0.0421,
+   0.0719
+  ],
+  "flag_any_disagreement": {
+   "three views": {
+    "recall": 0.6367,
+    "fpr": 0.2058,
+    "youden": 0.4309,
+    "precision": 0.423
+   },
+   "three samples": {
+    "recall": 0.4071,
+    "fpr": 0.0876,
+    "youden": 0.3195,
+    "precision": 0.5242
+   },
+   "five samples": {
+    "recall": 0.5052,
+    "fpr": 0.1123,
+    "youden": 0.3929,
+    "precision": 0.516
+   }
+  },
+  "error_correlation_with_host": {
+   "closed": {
+    "phi": 0.4759,
+    "yule_q": 0.8425
+   },
+   "bm25": {
+    "phi": 0.7465,
+    "yule_q": 0.9741
+   },
+   "dense": {
+    "phi": 0.6955,
+    "yule_q": 0.9599
+   },
+   "sample 1": {
+    "phi": 0.8319,
+    "yule_q": 0.9898
+   }
+  },
+  "same_wrong_option_given_host_wrong": {
+   "closed": 0.5157,
+   "bm25": 0.6806,
+   "dense": 0.6764,
+   "sample 1": 0.7975
+  },
+  "error_classes": {
+   "A: closed-book correct (evidence misled the model)": {
+    "n": 158,
+    "share_of_errors": 0.3299,
+    "flagged_by_views": 1.0,
+    "flagged_by_five_samples": 0.5127
+   },
+   "B: closed-book wrong, retrievers disagree": {
+    "n": 117,
+    "share_of_errors": 0.2443,
+    "flagged_by_views": 1.0,
+    "flagged_by_five_samples": 0.7179
+   },
+   "C: closed-book wrong, retrievers agree with host": {
+    "n": 204,
+    "share_of_errors": 0.4259,
+    "flagged_by_views": 0.1471,
+    "flagged_by_five_samples": 0.3775
+   },
+   "C: of which closed-book gives the same wrong option": 0.8529
+  },
+  "overlap_of_flagged_errors": {
+   "flagged by views": 305,
+   "flagged by five samples": 242,
+   "both": 176,
+   "samples only": 66,
+   "views only": 129,
+   "share of sample-flagged errors also flagged by views": 0.7273
+  }
+ }
+}
