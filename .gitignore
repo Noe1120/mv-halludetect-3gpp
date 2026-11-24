@@ -41,6 +41,8 @@ paper/archive_v2/
 paper/archive_v3/
 paper/archive_v4/
 paper/archive_v5/
+paper/archive_v6/
+paper/archive_v7/
 outputs/archive_testcv_20261030/
 
 # ---- 稿件全文：投稿/录用前不公开（需要时再决定是否放预印本） ----
@@ -52,6 +54,7 @@ paper/outline.md
 paper/sections/
 submission_IJMLC/
 submission_AnnTelecom/
+submission_TelecomSyst/
 paper/supplementary/
 paper/latex/main.tex
 paper/latex/references.bib
